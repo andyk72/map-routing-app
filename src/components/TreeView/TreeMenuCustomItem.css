@@ -1,0 +1,39 @@
+:root {
+    --rstm-item-indent: 20px;
+    --rstm-toggle-icon-width: 20px;
+}
+
+.rstm-tree-item--branch {
+    display: grid;
+    grid-template-columns: var(--rstm-toggle-icon-width) 1fr;
+}
+
+.rstm-toggle-icon-symbol {
+    width: var(--rstm-toggle-icon-width);
+    height: auto;
+    line-height: initial;
+}
+
+.rstm-tree-item-level0.rstm-tree-item--leaf {
+    padding-left: calc(1 * var(--rstm-item-indent));
+}
+
+.rstm-tree-item-level0.rstm-tree-item--branch {
+    padding-left: calc(1 * var(--rstm-item-indent) - var(--rstm-toggle-icon-width));
+}
+
+.rstm-tree-item-level1.rstm-tree-item--leaf {
+    padding-left: calc(2 * var(--rstm-item-indent));
+}
+
+.rstm-tree-item-level1.rstm-tree-item--branch {
+    padding-left: calc(2 * var(--rstm-item-indent) - var(--rstm-toggle-icon-width));
+}
+
+.rstm-tree-item-level2.rstm-tree-item--leaf {
+    padding-left: calc(3 * var(--rstm-item-indent));
+}
+
+.rstm-tree-item-level2.rstm-tree-item--branch {
+    padding-left: calc(3 * var(--rstm-item-indent) - var(--rstm-toggle-icon-width));
+}

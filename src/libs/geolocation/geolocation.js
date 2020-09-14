@@ -1,3 +1,13 @@
+/**
+ * geolocation module
+ * 
+ *  Provides geolocation functionality through the browser navigator.geolocation API
+ * 
+ * @public
+ * 
+ *  Geolocation Class
+ */
+
 export const GeolocationEvents = {
     ON_GET_CURRENT_POSITION: 'ON_GET_CURRENT_POSITION',
     ON_WATCH_POSITION: 'ON_WATCH_POSITION'
@@ -5,24 +15,44 @@ export const GeolocationEvents = {
 
 class Geolocation {
 
-    static factory() {
+    static factory(options) {
+        // geolocation is available
         if ("geolocation" in navigator) {
-            /* la geolocalizzazione è disponibile */
-            console.log('Geolocation!');
-            return new Geolocation();
+            return new Geolocation(options);
+        // geolocation is not available
         } else {
-            /* la geolocalizzazione NON È disponibile */
             console.error('Geolocation is not available');
             throw Error('Geolocation is not available');
         }
     }
 
-    constructor() {
+    constructor(options = {}) {
+
+        // init properties
         this.subscriptions = {};
         this.positionWatcher = null;
         this.currentPosition = null;
         this.positionsHistory = [];
+
+        // init subscriptions, if any
+        if (options.subscriptions) {
+            this.initSubscriptions(options.subscriptions);
+        }
+
+        // init position reading
+        this.initPosition();
+
+        // start listening to position changes
         this.listen();
+        
+    }
+
+    initSubscriptions(subscriptions) {
+        this.subscriptionsAdd(subscriptions);
+    }
+
+    initPosition() {
+        this.getPosition();
     }
 
     subscribe(event, callback) {
@@ -32,21 +62,17 @@ class Geolocation {
         this.subscriptions[event].push(callback);
     }
 
+    subscriptionsAdd(subscriptions) {
+        subscriptions.forEach(subscription => {
+            this.subscribe(subscription.event, subscription.callback);
+        });
+    }
+
     dispatch(event, params = {}) {
         if (!this.subscriptions[event]) {
             return;
         }
         this.subscriptions[event].forEach(callback => callback(params));
-    }
-
-    _updatePosition(position) {
-        this.currentPosition = position;
-        this.positionsHistory.push(position);
-    }
-
-    _resetPosition() {
-        this.currentPosition = null;
-        this.positionsHistory = [];
     }
 
     listen() {
@@ -59,7 +85,7 @@ class Geolocation {
         const geoOptions = {
             enableHighAccuracy: true, 
             maximumAge        : 30000, 
-            timeout           : 27000
+            timeout           : 3000 // 27000
         };
 
         /**
@@ -80,7 +106,7 @@ class Geolocation {
          *      .longitude
          */
         navigator.geolocation.getCurrentPosition(position => {
-            console.log('Got position ', position);
+            console.log('Geolocation.getPosition() -> received position ', position);
             this._updatePosition(position);
             this.dispatch(GeolocationEvents.ON_GET_CURRENT_POSITION, position);
             if (callback) {
@@ -89,13 +115,16 @@ class Geolocation {
         });
     }
 
+    _updatePosition(position) {
+        this.currentPosition = position;
+        this.positionsHistory.push(position);
+    }
+
+    _resetPosition() {
+        this.currentPosition = null;
+        this.positionsHistory = [];
+    }
+
 }
 
 export default Geolocation;
-
-
-/**
-navigator.geolocation.getCurrentPosition(function(position) {
-  do_something(position.coords.latitude, position.coords.longitude);
-});
- */

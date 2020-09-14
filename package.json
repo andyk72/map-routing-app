@@ -10,13 +10,18 @@
     "leaflet-routing-machine": "^3.2.12",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3"
+    "react-redux": "^7.2.1",
+    "react-scripts": "3.4.3",
+    "react-simple-tree-menu": "^1.1.18",
+    "redux": "^4.0.5"
   },
   "scripts": {
+    "dev:https": "HTTPS=true npm start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "create-component": "npx generate-react-cli component $COMPONENT"
   },
   "eslintConfig": {
     "extends": "react-app"

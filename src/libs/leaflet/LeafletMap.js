@@ -24,15 +24,6 @@ class LeafletMap {
         this.config = config;
     }
 
-    /**
-    configSet(options) {
-        const config = options.config
-            ? {...DEFAULT_CONFIG, ...options.config}
-            : DEFAULT_CONFIG;
-        this.config = config;
-    }
-     */
-
     render() {
 
         // init map

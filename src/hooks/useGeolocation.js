@@ -1,9 +1,33 @@
-import Geolocation, { GeolocationEvents } from '../libs/geolocation/geolocation';
+/**
+ * useGeolocation hook
+ * 
+ *  Adds geolocation functionality
+ * 
+ * @dependencies
+ * 
+ * 
+ */
 
-export default () => {
-    const geolocator = Geolocation.factory();
-    geolocator.subscribe(GeolocationEvents.ON_WATCH_POSITION, (position) => {
-        console.log('ON_WATCH_POSITION subscriber', position);
-    });
+import React from 'react';
+
+import Geolocation from '../libs/geolocation/geolocation';
+
+/**
+ * @param {Object} options
+ *  .subscriptions
+ */
+export default (options) => {
+
+    const [geolocator, setGeolocator] = React.useState();
+
+    React.useEffect(() => {
+        console.log('================================================> useGeolocation.useEffect ONMOUNT');
+        // create geolocation instance
+        const geo = Geolocation.factory(options);
+        // store geolocation instance in component state
+        setGeolocator(geo);
+    }, []);
+
     return geolocator;
+
 }
