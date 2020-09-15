@@ -45,6 +45,8 @@ const TreeView = treeViewProps => {
                 {({ search, items }) => (
                     <ul className="rstm-tree-item-group">
                         {items.map(({key, ...treeDataItemProps}) => {
+                            console.log('    > key = ', key);
+                            console.log('    > treeDataItemProps = ', treeDataItemProps);
                             let props = {...treeDataItemProps, ...treeViewItemProps};
                             return (
                                 <TreeMenuCustomItem key={ key } {...props}>

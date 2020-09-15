@@ -73,3 +73,7 @@ export const objectToTreeViewDataObject = (obj) => {
 export const isObject = v => {
     return Object.prototype.toString.call(v) === '[object Object]';
 }
+
+export const treeViewItemValueForRender = v => {
+    return JSON.stringify(v);
+};

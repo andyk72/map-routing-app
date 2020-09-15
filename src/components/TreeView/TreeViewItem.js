@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { treeViewItemValueForRender } from './treeViewUtils';
+
 import styles from './TreeViewItem.module.css';
 
 const TreeViewItem = props => {
@@ -7,7 +9,7 @@ const TreeViewItem = props => {
         <div className={ styles.tvItem } style={ props.style || {} }>
             <span className="tv-item-label">{ props.label }</span>
             { props.value &&
-                <span className="tv-item-value">{ props.value }</span>
+                <span className={ styles.tvItemValue }>{ treeViewItemValueForRender(props.value) }</span>
             }
         </div>
     );

@@ -9,9 +9,11 @@ import { objectToTreeViewDataObject } from './components/TreeView/treeViewUtils'
 
 import './App.css';
 
-const mapState = state => ({
-    systemMonitorData: objectToTreeViewDataObject(state)
-});
+const mapState = state => {
+    return {
+        systemMonitorData: objectToTreeViewDataObject(state)
+    }
+};
 
 function App(props) {
 
