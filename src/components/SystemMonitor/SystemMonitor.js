@@ -27,10 +27,6 @@ const SystemMonitor = ({ data }) => {
         drag();
     }, []);
 
-    React.useEffect(() => {
-        console.log('props.data ', data);
-    }, [data]);
-
     const drag = () => {
         const dragged = smRef.current;
         const dragger = smHeaderRef.current;

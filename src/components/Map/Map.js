@@ -64,7 +64,6 @@ const Map = (props) => {
      *          .longitude 
      */
     const leafletMapInit = ({ position }) => {
-        console.log('Map.leafletMapInit()');
 
         // Exit if leafletMap has already been instantiated
         if (leafletMap) {

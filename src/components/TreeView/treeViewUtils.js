@@ -1,3 +1,5 @@
+const ITEM_ARRAY_MAX_RENDER_SIZE = 3;
+
 /**
  * Transforms obj Object into an Object formatted to be consumed by TreeView Component
  * @param {Object} obj 
@@ -74,6 +76,29 @@ export const isObject = v => {
     return Object.prototype.toString.call(v) === '[object Object]';
 }
 
-export const treeViewItemValueForRender = v => {
-    return JSON.stringify(v);
+export const isArray = v => {
+    return Object.prototype.toString.call(v) === '[object Array]';
+}
+
+/**
+ * Formats v value to be rendered a into the TreeViewItem Component
+ *  a) If v is Array, reformats it (take only the last ITEM_ARRAY_MAX_RENDER_SIZE items)
+ *  b) Else, leaves it as it is
+ * @param {*} v 
+ */
+export const treeViewItemValueForRender = (v, options = {}) => {
+    if (isArray(v)) {
+        const maxItemsNum = options.maxItemsNum || ITEM_ARRAY_MAX_RENDER_SIZE;
+        const arraySize = v.length;
+        const suspension = (arraySize > maxItemsNum) ? '...' : '';
+        let cropInfo = '';
+        if (arraySize > maxItemsNum) {
+            cropInfo = `...(${ maxItemsNum }/${ arraySize})...`;
+        }
+        v = [...v]
+            .reverse()
+            .slice(0, maxItemsNum);
+        v = JSON.stringify(v) + cropInfo;//suspension + `(${ maxItemsNum }/${ arraySize})` + suspension;
+    }
+    return v;
 };
