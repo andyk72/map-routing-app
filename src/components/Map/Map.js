@@ -5,6 +5,7 @@ import { coordsRegister } from '../../redux/actions/actionsGeolocation';
 
 import { GeolocationEvents } from '../../libs/geolocation/geolocation';
 import useGeolocation from '../../hooks/useGeolocation';
+import { geolocationCoordinatesToLatLng } from '../../data/geolocationFormatter';
 
 import LeafletMap from '../../libs/leaflet/LeafletMap';
 
@@ -14,7 +15,6 @@ import styles from './Map.module.css';
 
 const mapDispatch = dispatch => ({
     positionDetected: position => {
-        console.log('position.coords = ', position.coords);
         dispatch(coordsRegister(position.coords));
     }
 });
@@ -23,17 +23,23 @@ const Map = (props) => {
 
     const [leafletMap, setLeafletMap] = React.useState(null);
 
+    // When leafletMap is instantiated -> subscribe to watch
+    React.useEffect(() => {
+        if (leafletMap && geolocator) {
+            geolocator.subscribe(
+                GeolocationEvents.ON_WATCH_POSITION,
+                (position) => {
+                    console.log('ON_WATCH_POSITION');
+                    console.log('    position = ', position);
+                    props.positionDetected(position);
+                    leafletMap.updateCenter(geolocationCoordinatesToLatLng(position.coords));
+                }
+            );
+        }
+    }, [leafletMap]);
+
     const geolocator = useGeolocation({
         subscriptions: [
-            {
-                event: GeolocationEvents.ON_WATCH_POSITION,
-                callback: (position) => {
-                    console.log('ON_WATCH_POSITION subscription ', position);
-                    console.log('    [TODO] : dispatch(coordsRegister(position.coords))');
-                    console.log('position = ', position);
-                    props.positionDetected(position);
-                }
-            },
             {
                 event: GeolocationEvents.ON_GET_CURRENT_POSITION,
                 callback: (position) => {
@@ -47,9 +53,7 @@ const Map = (props) => {
         ]
     });
 
-    const onClickHandler = (evt) => {
-        leafletMapInit({position:0});
-    };
+    const onClickHandler = (evt) => {};
 
     /**
      * Inits (renders) LeafletMap instance
@@ -60,13 +64,18 @@ const Map = (props) => {
      *          .longitude 
      */
     const leafletMapInit = ({ position }) => {
+        console.log('Map.leafletMapInit()');
+
+        // Exit if leafletMap has already been instantiated
         if (leafletMap) {
             return;
         }
+
+        const startCenter = [position.coords.latitude, position.coords.longitude];
         
         // Create LeafletMap instance
         const map = new LeafletMap({
-            startCenter: [position.coords.latitude, position.coords.longitude]
+            startCenter
         });
 
         // Render the map
